@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothGatt: BluetoothGatt? = null
-
+    private lateinit var switch1: Switch
     private lateinit var seekBar: SeekBar
     private lateinit var percentageTextView: TextView
     private lateinit var switchView: Switch
@@ -35,15 +35,23 @@ class MainActivity : AppCompatActivity() {
     private val ADVERTISING_UUID = UUID.fromString("c8bac71f-579e-4d69-b18e-83639e15e705")
 
     // Service- und Charakteristik-UUIDs
+    // Service UUID
     private val SERVICE_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef0")
+    // UUID für den Batteriestand
     private val READ_CHARACTERISTIC_UUID = UUID.fromString("abcdef01-1234-5678-1234-56789abcdef0")
+    // UUID für den Anpressdruck
     private val PERCENTAGE_CHARACTERISTIC_UUID = UUID.fromString("abcdef02-1234-5678-1234-56789abcdef0")
+    // UUID für die Vakuumpumpe
     private val SWITCH_CHARACTERISTIC_UUID = UUID.fromString("abcdef03-1234-5678-1234-56789abcdef0")
+    // UUID für den Modus
+    private val SWITCH1_CHARACTERISTIC_UUID = UUID.fromString("abcdef04-1234-5678-1234-56789abcdef0")
+
 
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private var scanning = false
     private val SCAN_PERIOD: Long = 10000 // 10 Sekunden Scanzeit
 
+    // Wenn die App gestartet wird
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,11 +64,14 @@ class MainActivity : AppCompatActivity() {
         connectButton = findViewById(R.id.connectButton)
         characteristicValueTextView = findViewById(R.id.characteristicValueTextView)
         progressBar = findViewById(R.id.progressBar)
-
+        switch1 = findViewById(R.id.switch1)
 
         // Hinzufügen des Switch-Listeners
+        switch1.setOnCheckedChangeListener { _, isChecked ->
+            sendSwitch1Value(isChecked) // Übergibt Boolean-Wert
+        }
         switchView.setOnCheckedChangeListener { _, isChecked ->
-            sendSwitchValue(isChecked) // Übergibt den Boolean-Wert korrekt
+            sendSwitchValue(isChecked) // Übergibt Boolean-Wert
         }
 
         // Weitere UI-Listener und Bluetooth-Initialisierung
@@ -85,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         initBluetooth() // Bluetooth initialisieren
     }
 
-
+    // Bluetooth LE initialisieren
     private fun initBluetooth() {
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
@@ -130,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    // Führt den Scan aus und sucht nach den gegebenen Advertising UUID
     private fun startScan() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
             Toast.makeText(this, "Berechtigung BLUETOOTH_SCAN benötigt", Toast.LENGTH_SHORT).show()
@@ -150,7 +161,7 @@ class MainActivity : AppCompatActivity() {
 
             val filters: MutableList<ScanFilter> = ArrayList()
             val scanFilter = ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid(ADVERTISING_UUID)) // Filter auf Ihre UUID
+                .setServiceUuid(ParcelUuid(ADVERTISING_UUID)) // Filter auf UUID
                 .build()
             filters.add(scanFilter)
 
@@ -288,7 +299,7 @@ class MainActivity : AppCompatActivity() {
     private val readRunnable = object : Runnable {
         override fun run() {
             readSpecificCharacteristic()
-            handler.postDelayed(this, 3000) // Alle 3 Sekunden aktualisieren
+            handler.postDelayed(this, 10000) // Alle 10 Sekunden aktualisiren
         }
     }
 
@@ -354,9 +365,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    private fun sendSwitch1Value(isOn: Boolean) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+            Toast.makeText(this, "Berechtigung BLUETOOTH_CONNECT benötigt", Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val service = bluetoothGatt?.getService(SERVICE_UUID)
+            val characteristic = service?.getCharacteristic(SWITCH1_CHARACTERISTIC_UUID)
+            if (characteristic == null) {
+                Log.e("BLE", "Charakteristik nicht gefunden: $SWITCH1_CHARACTERISTIC_UUID")
+                return
+            }
 
-
-
+            val stateByte = if (isOn) 1 else 0
+            characteristic.value = byteArrayOf(stateByte.toByte())
+            val result = bluetoothGatt?.writeCharacteristic(characteristic)
+            Log.d("BLE", "Switch1-Zustand gesendet: ${if (isOn) "An" else "Aus"}, Ergebnis: $result")
+        } catch (e: SecurityException) {
+            Log.e("BLE", "Fehler beim Senden des Switch1-Zustands", e)
+        }
+    }
 
 
     @SuppressLint("MissingPermission")
@@ -382,11 +412,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("BLE", "Fehler beim Senden des Schalterzustands", e)
         }
     }
-
-
-
-
-
+//Wenn die App geschlossen wird
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(readRunnable)

@@ -9,15 +9,15 @@
     <!-- Verbinden-Button -->
     <Button
         android:id="@+id/connectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="209dp"
+        android:layout_height="64dp"
         android:text="Verbinden"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Fortschrittsanzeige -->
-
     <!-- SeekBar -->
 
     <!-- Prozentwert -->
@@ -25,63 +25,75 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="76dp"
+        android:layout_width="357dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="132dp"
         android:max="100"
         android:progress="0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.727"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Übernehmen-Button -->
-
-    <!-- Switch -->
-
+    <!-- Switch für Vakuum An/Aus-->
     <!-- Charakteristik-Wert -->
+    <!-- Switch für Modus Manuell/Automatik-->
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="152dp"
-        android:max="100"
+    <Button
+        android:id="@+id/applyButton"
+        android:layout_width="204dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="12dp"
+        android:text="Übernehmen"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@id/percentageTextView" />
 
     <TextView
         android:id="@+id/percentageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="0%"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/seekBar" />
 
-    <Button
-        android:id="@+id/applyButton"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Übernehmen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="428dp"
+        android:text="Anpressdruck Einstellen:"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/percentageTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="355dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="296dp"
+        android:max="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
     <Switch
         android:id="@+id/switchView"
-        android:layout_width="152dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="168dp"
-        android:text="Vakuum An/Aus"
+        android:layout_width="323dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="312dp"
+        android:text="Vakuum: An/Aus"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.267"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -89,10 +101,33 @@
         android:id="@+id/characteristicValueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
-        android:textSize="18sp"
+        android:layout_marginTop="100dp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.53"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="322dp"
+        android:layout_height="87dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="200dp"
+        android:text="Mode: Manuell/Automatisch"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="175dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:text="Batteriestand:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
